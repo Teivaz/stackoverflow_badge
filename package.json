@@ -1,0 +1,18 @@
+{
+  "name": "stackoverflow_badge_backend",
+  "version": "1.0.0",
+  "description": "Backend for stackoverflow badge. Generates and caches the badges for stackoverflow users",
+  "main": "main.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "author": "teivaz",
+  "license": "Zlib",
+  "devDependencies": {
+    "jasmine": "^2.4.1",
+    "mongodb": "^2.2.6",
+    "mongoskin": "^2.1.0",
+    "phantomjs-prebuilt": "^2.1.11",
+    "urijs": "^1.18.1"
+  }
+}

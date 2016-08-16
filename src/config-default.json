@@ -1,0 +1,8 @@
+{
+	"online": {
+		"key": "" // API key from http://stackapps.com/apps/oauth/register
+	},
+	"database": {
+		"path": "" // path to the mongo database you are using
+	}
+}
