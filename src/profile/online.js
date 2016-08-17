@@ -11,7 +11,7 @@ const requestInterval = 1000/maxRequestsPerSecond
 const backoffInterval = 1000
 
 function log(text){
-	console.log(text)
+	//console.log(text)
 }
 
 module.exports = {
@@ -22,8 +22,20 @@ module.exports = {
 		return this._pending
 	},
 
+	isTimeout: function() {
+		return this._timeout
+	},
+
+	isBackoff: function() {
+		return this._backoff
+	},
+
 	quotaRemaining: function() {
 		return this._quotaRemaining
+	},
+
+	maxUsersPerRequest: function() {
+		return 30
 	},
 
 	/*
@@ -57,7 +69,6 @@ module.exports = {
 	/* Private */
 
 	_startRequest: function(url, resolve, reject) {
-		var self = this
 		// download profiles of requested users
 		// on any error reject
 		// resolves on success with json array of user profiles
@@ -74,8 +85,14 @@ module.exports = {
 			})
 			output.on('end', () => {
 				const response = JSON.parse(body)
-				self._onRequestEnd(response)
-				resolve(response.items || [])
+				if(res.statusCode === 200) {
+					this._onRequestEnd(response)
+					resolve(response.items || [])
+				}
+				else {
+					this._onRequestEnd(response, res.statusCode)
+					reject(response)
+				}
 			})
 		}).on('error', (e) => {
 			self._onRequestEnd({}, e)
@@ -87,6 +104,7 @@ module.exports = {
 		var delay = requestInterval
 		if (error) {
 			delay = backoffInterval
+			this._backoff = true
 		}
 		else {
 			this._quotaRemaining = response.quota_remaining
@@ -96,10 +114,15 @@ module.exports = {
 
 		this._timeout = true
 		this._pending = false
-		setTimeout(() => {this._timeout = false}, delay)
+		setTimeout(() => {
+			this._timeout = false
+			this._backoff = false
+		}, delay)
 	},
 
 	_pending: false,
 	_quotaRemaining: 10000,
+	_timeout: false,
+	_backoff: false,
 
 }
