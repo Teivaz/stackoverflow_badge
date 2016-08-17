@@ -3,6 +3,7 @@
 		"key": "" // API key from http://stackapps.com/apps/oauth/register
 	},
 	"database": {
-		"path": "" // path to the mongo database you are using
+		"mode": "js", // js or mongo
+		"mongo_path": "" // path to the mongo database you are using
 	}
 }
