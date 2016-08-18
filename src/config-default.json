@@ -5,5 +5,8 @@
 	"database": {
 		"mode": "js", // js or mongo
 		"mongo_path": "" // path to the mongo database you are using
+	},
+	"app": {
+		"port": 3000 // port to run your application
 	}
 }

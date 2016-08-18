@@ -1,12 +1,15 @@
+'use strict'
 const Http = require('http')
 const Uri = require('urijs')
 const Fs = require('fs')
 
+const Config = require('./config').app
 const ProfileWorker = require('./profile/worker')
 const Render = require('./renderer/main')
 const Templates = require('./templates')
 
-const favicon = fs.readFileSync('resources/favicon.ico')
+const favicon = Fs.readFileSync('resources/favicon.ico')
+const index = Fs.readFileSync('resources/index.html')
 
 function log(level, text) {
 	console.log(text)
@@ -17,12 +20,17 @@ function faviconPlease(res) {
 	res.end(favicon)
 }
 
+function indexPlease(res) {
+	res.writeHead(200, {'Content-Type': 'text/html'})
+	res.end(index)
+}
+
 function nothingPlease(res) {
 	res.writeHead(404, {'Content-Type': 'text/plain'})
 	res.end('404. Not found')
 }
 
-function noUserPlease() {
+function noUserPlease(res) {
 	res.writeHead(400, {'Content-Type': 'text/plain'})
 	res.end('400. Requested user not found')
 }
@@ -51,7 +59,7 @@ function servePlease(path, res) {
 	var idParts = userId.split('.')
 	var user_id = Number(idParts[0])
 	if(idParts.length > 1) {
-		ext = idParts[idParts.length-1]
+		format = idParts[idParts.length-1]
 	}
 
 	ProfileWorker.request(user_id).then( (user) => {
@@ -82,4 +90,4 @@ var s = Http.createServer(function (req, res) {
 		servePlease(path, res)
 	}
 })
-s.listen(3100)
+s.listen(Config.port)

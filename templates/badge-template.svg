@@ -1,0 +1,28 @@
+<svg id="root" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="208px" height="58px" viewBox="0 0 208 58" enable-background="new 0 0 208 58" baseProfile="full" >
+	<title>badge-template</title>
+	<style type="text/css">
+	<![CDATA[
+	.text {font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;}
+	]]>
+	</style>
+	<rect x="0" y="0" fill="#EEEEEE" stroke="#CCCCCC" stroke-width="2" width="208" height="58"/>
+	<image id="avatar" x="4" y="4"  width="50" height="50" xlink:href="avatar.jpg"/>
+	<!-- icon.x = (208 - pad - name.width - pad - icon.width) -->
+	<svg id="icon" width="13" height="23" viewBox="0 0 31.4 37" y="-3" x="153">
+		<polygon fill="#BCBBBB" points="26.5,42.2 26.5,32.3 29.8,32.3 29.8,45.5 0,45.5 0,32.3 3.3,32.3 3.3,42.2 "/>
+		<path fill="#F48024" d="M7,31.4l16.2,3.4l0.7-3.2L7.7,28.2L7,31.4z M9.1,23.6l15,7l1.4-3l-15-7L9.1,23.6z M13.3,16.2L26,26.8
+	l2.1-2.5L15.4,13.7L13.3,16.2z M21.5,8.4l-2.7,2l9.9,13.3l2.7-2L21.5,8.4z M6.6,38.9h16.6v-3.3H6.6C6.6,35.6,6.6,38.9,6.6,38.9z"/>
+	</svg>
+	<text id="name" class="text" fill="#1279C9" font-weight="500" font-size="13" text-anchor="end" y="18" x="204">teivaz</text>
+	<text id="reputation" class="text" fill="#444444" font-weight="bold" font-size="14" text-anchor="end" y="35" x="204">1,387</text>
+	<!-- gold-badge-icon.cx = (silver-badge-icon.cx - pad - gold-badge.width - 6)-->
+	<circle id="gold-badge-icon" fill="#FFCC01" cy="47" cx="148" r="3"/>
+	<text id="gold-badge" class="text" fill="#808185" font-weight="normal" font-size="12px" text-anchor="end" y="51" x="160">2</text>
+	<!-- silver-badge-icon.cx = (bronze-badge-icon.cx - pad - silver-badge.width - 6)-->
+	<circle id="silver-badge-icon" fill="#B4B8BC" cy="47" cx="166" r="3"/>
+	<text id="silver-badge" class="text" fill="#808185" font-weight="normal" font-size="12px" text-anchor="end" y="51" x="178">8</text>
+	<!-- bronze-badge-icon.cx = (208 - pad - bronze-badge.width - 6)-->
+	<circle id="bronze-badge-icon" fill="#D1A684" cy="47" cx="184.66" r="3"/>
+	<text id="bronze-badge" class="text" fill="#808185" font-weight="normal" font-size="12px" text-anchor="end" y="51" x="204">22</text>
+</svg>
