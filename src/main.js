@@ -6,10 +6,10 @@ const Fs = require('fs')
 const Config = require('./config').app
 const ProfileWorker = require('./profile/worker')
 const Render = require('./renderer/main')
-const Templates = require('./templates')
+const Templates = require('./templates/main')
 
-const favicon = Fs.readFileSync('resources/favicon.ico')
-const index = Fs.readFileSync('resources/index.html')
+const favicon = Fs.readFileSync(__dirname+'/../resources/favicon.ico')
+const index = Fs.readFileSync(__dirname+'/../resources/index.html')
 
 function log(level, text) {
 	console.log(text)
@@ -35,6 +35,12 @@ function noUserPlease(res) {
 	res.end('400. Requested user not found')
 }
 
+function internalErrorPlease(res) {
+	res.writeHead(500, {'Content-Type': 'text/plain'})
+	res.end('500. Internal error')
+	log('error', 'Internal error')
+}
+
 function servePlease(path, res) {
 	var parts = path.split('/')
 	var userId = ''
@@ -51,7 +57,7 @@ function servePlease(path, res) {
 	else if(parts.length > 1) {
 		userId = parts[1]
 	}
-	else{
+	else {
 		nothingPlease(res)
 		return
 	}
@@ -66,6 +72,8 @@ function servePlease(path, res) {
 		Render(user, Templates(template), format).then( (image, mime) => {
 			res.writeHead(200, {'Content-Type': mime})
 			res.end(image)
+		}).catch( () => {
+			internalErrorPlease(res)
 		})
 	}).catch( () => {
 		noUserPlease(res)
@@ -74,13 +82,17 @@ function servePlease(path, res) {
 
 ProfileWorker.onload = function(users) {
 	// render some images when have free time
+	var task = function() {
+		if(users.length > 0)
+			Render(users.shift(), Templates(), 'png').then(task)
+	}
 }
 
 var s = Http.createServer(function (req, res) {
 	var uri = Uri(req.url)
 	var path = uri.pathname()
 
-	if(path === '/favicon.ico'){
+	if(path === '/favicon.ico') {
 		faviconPlease(res)
 	}
 	else if(path === '/') {

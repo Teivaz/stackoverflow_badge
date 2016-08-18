@@ -1,5 +1,6 @@
-describe('profile.online', function(){
-  it("herps the derps", function() {
-    expect(true).toEqual(true);
-  });	
+describe('Main', function(){
+	const main = require('./main')
+	it('non existing user', function() {
+		expect(true).toEqual(true)
+	})
 })

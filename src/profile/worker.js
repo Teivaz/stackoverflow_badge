@@ -1,7 +1,7 @@
 'use strict'
 const _ = require('underscore')
-const db = require('./profile/database')
-const online = require('./profile/online')
+const db = require('./database')
+const online = require('./online')
 
 const maxUsersPerRequest = 30
 const requestInterval = 5*60*1000
@@ -65,7 +65,7 @@ module.exports = {
 		// clear timer
 		clearTimeout(this._timer)
 		this._timer = null
-		
+
 		this._pendingRequests = {}
 		var user_ids = _.keys(this._requests).slice(0, maxUsersPerRequest)
 		user_ids.forEach( (user_id) => {
