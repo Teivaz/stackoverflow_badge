@@ -1,3 +1,4 @@
+'use strict'
 const Config = require('../config').database
 
 /* Database */

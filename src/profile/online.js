@@ -1,3 +1,4 @@
+'use strict'
 const Config = require('../config').online
 
 const Http = require('https')
@@ -95,7 +96,7 @@ module.exports = {
 				}
 			})
 		}).on('error', (e) => {
-			self._onRequestEnd({}, e)
+			this._onRequestEnd({}, e)
 			reject(e)
 		})
 	},

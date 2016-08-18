@@ -1,3 +1,4 @@
+'use strict'
 /*
  * Implementation of database in plain js object
  * Does not save on disc
