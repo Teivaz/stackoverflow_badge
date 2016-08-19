@@ -46,6 +46,7 @@ module.exports = {
 		var values = _.values(db)
 		values.sort(compare)
 		var result = []
+		count = Math.min(count, values.length)
 		for(var i = 0; i < count; i++) {
 			result.push(JSON.parse(values[i].data).user_id)
 		}

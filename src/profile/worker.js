@@ -6,6 +6,10 @@ const online = require('./online')
 const maxUsersPerRequest = 30
 const requestInterval = 5*60*1000
 
+function log(level, text) {
+	console.log(text)
+}
+
 module.exports = {
 	/* 
 	 * Callback will be triggered after each completed request
@@ -35,6 +39,7 @@ module.exports = {
 	/* Private */
 
 	_processResult: function(result) {
+
 		db.saveUsers(result)
 		result.forEach( (item) => {
 			if (item.user_id in this._pendingRequests){
@@ -42,7 +47,7 @@ module.exports = {
 				delete this._pendingRequests[item.user_id]
 			}
 		})
-		_.keys(this._pendingRequests).forEach( (request) => {
+		_.values(this._pendingRequests).forEach( (request) => {
 			request.reject()
 		})
 		this._pendingRequests = {}
@@ -74,9 +79,12 @@ module.exports = {
 		})
 
 		db.getUsersToUpdate(maxUsersPerRequest - user_ids.length).then( (moreUser_ids) => {
-			online.downloadUsers(user_ids.push(...moreUser_ids)).then( (users) => {
+			//log('verbose', 'users fetched from db')
+			user_ids.push(...moreUser_ids)
+			online.downloadUsers(user_ids).then( (users) => {
 				this._processResult(users)
 			}).catch( () => {
+				log('verbose', 'users download fail')
 				this._processResult([])
 			})
 		})

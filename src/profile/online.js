@@ -11,7 +11,7 @@ const maxRequestsPerSecond = 30
 const requestInterval = 1000/maxRequestsPerSecond
 const backoffInterval = 1000
 
-function log(text){
+function log(level, text){
 	//console.log(text)
 }
 
@@ -52,9 +52,10 @@ module.exports = {
 	},
 
 	downloadUsers: function(user_ids) {
+		log('verbose', 'downloadUsers '+JSON.stringify(user_ids))
 		this._pending = true
 		const url = this.generateUrl(user_ids)
-		log(url)
+		log('verbose', url)
 		return new Promise( (resolve, reject) => {
 			if (this._timeout) {
 				setTimeout(() => {
@@ -110,7 +111,7 @@ module.exports = {
 		else {
 			this._quotaRemaining = response.quota_remaining
 			var quota = Number(100 * this._quotaRemaining / response.quota_max).toFixed(0)
-			log('quota '+quota+'%'+' ('+this._quotaRemaining+')')
+			log('info', 'quota '+quota+'%'+' ('+this._quotaRemaining+')')
 		}
 
 		this._timeout = true
