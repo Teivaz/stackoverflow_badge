@@ -2,8 +2,8 @@
 const Phantom = require('phantomjs-prebuilt')
 const Fs = require('fs')
 
-function log(data) {
-	console.log(data)
+function log(level, data) {
+	//console.log(data)
 }
 
 const formats = {
@@ -24,9 +24,18 @@ function validateFormat(format) {
 }
 
 function formatResponse(path, format) {
-	//console.log(__dirname + '/' + path)
+	//console.log(path)
+	var data = null
+	var error = null
+	try {
+		data = Fs.readFileSync(path)
+	}
+	catch(e) {
+		error = 'fs error'
+	}
 	return {
-		data: Fs.readFileSync(__dirname + '/' + path),
+		data: data,
+		error: error,
 		type: formats[format]
 	}
 }
@@ -44,7 +53,6 @@ module.exports = function(user, template, format){
 		var program = Phantom.exec(script, JSON.stringify(options), JSON.stringify(user))
 		var path = ''
 		program.stdout.on('data', function(data) {
-			//console.log('ondata')
 			path += data
 		})
 		//program.stdout.pipe(process.stdout)
@@ -52,9 +60,10 @@ module.exports = function(user, template, format){
 		program.on('exit', (code) => {
 			if(code === 0) {
 				resolve(formatResponse(path, format))
+				log('verbose', 'rendering ok ' + code)
 			}
 			else {
-				log('rendering error ' + code)
+				log('vebose', 'rendering error ' + code)
 				reject()
 			}
 		})

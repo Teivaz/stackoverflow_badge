@@ -35,10 +35,10 @@ function noUserPlease(res) {
 	res.end('400. Requested user not found')
 }
 
-function internalErrorPlease(res) {
+function internalErrorPlease(res, error) {
 	res.writeHead(500, {'Content-Type': 'text/plain'})
-	res.end('500. Internal error')
-	log('error', 'Internal error')
+	res.end('500. Internal error\n'+error)
+	log('error', 'Internal error\n'+error)
 }
 
 function servePlease(path, res) {
@@ -67,15 +67,20 @@ function servePlease(path, res) {
 	if(idParts.length > 1) {
 		format = idParts[idParts.length-1]
 	}
-
 	ProfileWorker.request(user_id).then( (user) => {
-		Render(user, Templates(template), format).then( (image, mime) => {
-			res.writeHead(200, {'Content-Type': mime})
-			res.end(image)
+		Render(user, Templates(template), format).then( (image) => {
+			if(image.error) {
+				internalErrorPlease(res, image.error.toString())
+			}
+			else {
+				res.writeHead(200, {'Content-Type': image.type})
+				res.end(image.data)
+			}
 		}).catch( () => {
-			internalErrorPlease(res)
+			internalErrorPlease(res, 'render error')
 		})
 	}).catch( () => {
+		log('info', 'user not found')
 		noUserPlease(res)
 	})
 }

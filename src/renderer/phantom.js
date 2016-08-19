@@ -2,6 +2,7 @@
 const Uri = require('urijs')
 
 const system = require('system')
+const Fs = require('fs')
 const options = JSON.parse(system.args[1])
 var profile = JSON.parse(system.args[2])
 var page = require('webpage').create()
@@ -109,7 +110,7 @@ function setDimensions(page) {
 }
 
 function renderPage(page, user) {
-	var path = '../../cache/'+user.user_id+'.'+options.format
+	var path = Fs.workingDirectory+'/cache/'+user.user_id+'.'+options.format
 	page.render(path)
 	try {
 		system.stdout.write(path)

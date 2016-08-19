@@ -4,7 +4,8 @@
   "description": "Backend for stackoverflow badge. Generates and caches the badges for stackoverflow users",
   "main": "main.js",
   "scripts": {
-    "test": "jasmine"
+    "test": "jasmine",
+    "start": "node src/main.js"
   },
   "author": "teivaz",
   "license": "Zlib",
