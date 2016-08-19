@@ -1,6 +1,7 @@
 'user strict'
 const Phantom = require('phantomjs-prebuilt')
 const Fs = require('fs')
+const Templates = require('../templates/main')
 
 function log(level, data) {
 	//console.log(data)
@@ -40,12 +41,14 @@ function formatResponse(path, format) {
 	}
 }
 
-module.exports = function(user, template, format){
+var render = function(user, template, format){
 	format = validateFormat(format)
+	template = Templates(template)
 
 	return new Promise( (resolve, reject) => {
 		var options = {
-			template: template,
+			templatePath: template.path,
+			templateName: template.name,
 			format: format,
 			id: user.user_id
 		}
@@ -69,3 +72,8 @@ module.exports = function(user, template, format){
 		})
 	})
 }
+
+render.formats = formats
+render.defaultFormat = defaultFormat
+
+module.exports = render

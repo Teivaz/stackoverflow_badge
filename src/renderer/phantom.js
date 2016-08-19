@@ -110,7 +110,10 @@ function setDimensions(page) {
 }
 
 function renderPage(page, user) {
-	var path = Fs.workingDirectory+'/cache/'+user.user_id+'.'+options.format
+	var path = Fs.workingDirectory + 
+		'/cache/' +
+		options.templateName + '/' +
+		user.user_id + '.' + options.format
 	page.render(path)
 	try {
 		system.stdout.write(path)
@@ -138,7 +141,7 @@ function finish() {
 	phantom.exit();
 }
 
-page.open(options.template, function(status) {
+page.open(options.templatePath, function(status) {
 	if (status === 'success') {
 		setDimensions(page)
 		var user = createUserData(profile)

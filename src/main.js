@@ -6,7 +6,7 @@ const Fs = require('fs')
 const Config = require('./config').app
 const ProfileWorker = require('./profile/worker')
 const Render = require('./renderer/main')
-const Templates = require('./templates/main')
+const Cache = require('./cache/main')
 
 const favicon = Fs.readFileSync(__dirname+'/../resources/favicon.ico')
 const index = Fs.readFileSync(__dirname+'/../resources/index.html')
@@ -67,8 +67,16 @@ function servePlease(path, res) {
 	if(idParts.length > 1) {
 		format = idParts[idParts.length-1]
 	}
+
+	var cached = Cache(template, user_id, format)
+	if(cached) {
+		res.writeHead(200, {'Content-Type': cached.type})
+		res.end(cached.data)
+		return
+	}
+
 	ProfileWorker.request(user_id).then( (user) => {
-		Render(user, Templates(template), format).then( (image) => {
+		Render(user, template, format).then( (image) => {
 			if(image.error) {
 				internalErrorPlease(res, image.error.toString())
 			}
@@ -89,7 +97,7 @@ ProfileWorker.onload = function(users) {
 	// render some images when have free time
 	var task = function() {
 		if(users.length > 0)
-			Render(users.shift(), Templates(), 'png').then(task)
+			Render(users.shift(), 'default', 'png').then(task)
 	}
 }
 
