@@ -12,8 +12,8 @@ module.exports = function(template, user_id, format) {
 	} 
 	var path = __dirname +
 		'/../../cache/' +
-		template.name + '/' +
-		user_id + '.' + format
+		user_id + '/' +
+		template.name + '.' + format
 
 	if(Fs.existsSync(path)){
 		return {

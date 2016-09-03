@@ -11,6 +11,20 @@ function warning(msg) {
 	//console.log('warning ' + options.id + ': ' + msg)
 }
 
+page.onError = function(msg, trace) {
+	var msgStack = ['ERROR: ' + msg]
+	if (trace && trace.length) {
+		msgStack.push('TRACE:')
+		trace.forEach(function(t) {
+			msgStack.push(' -> ' + t.file + ': ' + t.line + (t.function ? ' (in function "' + t.function +'")' : ''))
+		})
+	}
+	console.error(msgStack.join('\n'))
+}
+page.onConsoleMessage = function(msg, lineNum, sourceId) {
+	//console.log('CONSOLE: ' + msg + ' (from line #' + lineNum + ' in "' + sourceId + '")')
+}
+
 function toLocaleString(number) {
 	var result = []
 	while(number >= 1000) {
@@ -36,8 +50,9 @@ function downloadAvatar(page, user, callback) {
 	page.evaluate(function(src) {
 		var img = document.getElementById('avatar')
 		var timer = setTimeout(function(){
-			if(!img.complete)
+			if(!img.complete) {
 				window.callPhantom('image error. timeout')
+			}
 		}, 3000)
 		img.onerror = function(){
 			clearTimeout(timer)
@@ -94,16 +109,16 @@ function setDimensions(page) {
 			height: attributes.height.value,
 		}
 	})
-	var width = parseInt(dimensions.width, 10);
-	var height = parseInt(dimensions.height, 10);
+	var width = parseInt(dimensions.width, 10)
+	var height = parseInt(dimensions.height, 10)
 
 	page.viewportSize = {
 		width: width,
 		height: height
 	}
 	page.clipRect = {
-		top: 0,
-		left: 0,
+		top: 8,
+		left: 8,
 		width: width,
 		height: height
 	}
@@ -112,8 +127,8 @@ function setDimensions(page) {
 function renderPage(page, user) {
 	var path = Fs.workingDirectory + 
 		'/cache/' +
-		options.templateName + '/' +
-		user.user_id + '.' + options.format
+		user.user_id + '/' +
+		options.templateName + '.' + options.format
 	page.render(path)
 	try {
 		system.stdout.write(path)
@@ -123,22 +138,8 @@ function renderPage(page, user) {
 	}
 }
 
-page.onError = function(msg, trace) {
-	var msgStack = ['ERROR: ' + msg];
-	if (trace && trace.length) {
-		msgStack.push('TRACE:');
-		trace.forEach(function(t) {
-			msgStack.push(' -> ' + t.file + ': ' + t.line + (t.function ? ' (in function "' + t.function +'")' : ''));
-		});
-	}
-	console.error(msgStack.join('\n'));
-}
-page.onConsoleMessage = function(msg, lineNum, sourceId) {
-	//console.log('CONSOLE: ' + msg + ' (from line #' + lineNum + ' in "' + sourceId + '")');
-}
-
 function finish() {
-	phantom.exit();
+	phantom.exit()
 }
 
 page.open(options.templatePath, function(status) {
@@ -159,4 +160,4 @@ page.open(options.templatePath, function(status) {
 	else {
 		finish()
 	}
-});
+})

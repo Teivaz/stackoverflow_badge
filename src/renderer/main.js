@@ -67,7 +67,7 @@ var render = function(user, template, format){
 			}
 			else {
 				log('vebose', 'rendering error ' + code)
-				reject()
+				reject(code)
 			}
 		})
 	})

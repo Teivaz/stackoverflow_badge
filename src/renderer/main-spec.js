@@ -32,11 +32,12 @@ describe('Render', function() {
 		var template = '../../templates/badge-template.html'
 		var format = 'png'
 		render(user, template, format).then( (result) => {
-			'done: ' + result.type + ' | ' + result.data.length
+			//'done: ' + result.type + ' | ' + result.data.length
+			expect(result.error).toBe(null)
 			expect(result.type).toBe('image/png')
-			expect(result.data.length).toBeGreater(10)
-		}).catch( () => {
-			fail()
+			expect(result.data.length).toBeGreaterThan(10)
+		}).catch( (e) => {
+			fail(e)
 		}).then(done)
 	})
-})
+}, 40000);
